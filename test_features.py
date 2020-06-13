@@ -23,11 +23,16 @@ class TestFeatures(unittest.TestCase):
         self.my_features.rise_money(500)
         self.assertNotEqual(self.atm_balance, self.my_features.rise_money(500))
 
+    def test_rise_money_sequentially(self):
+        self.my_features.enter_pin(self.correct_pin)
+        self.my_features.rise_money(500)
+        self.my_features.rise_money(300)
+        self.assertEqual(self.my_features.rise_money(800), self.atm_balance+800)
+
     def test_rise_money_add_null(self):
         self.my_features.enter_pin(self.correct_pin)
         self.my_features.rise_money(0)
         self.assertEqual(self.atm_balance, self.my_features.rise_money(0))
-
 
     def test_enter_pin_correct_true(self):
         self.assertTrue(self.my_features.enter_pin(self.correct_pin))
@@ -53,6 +58,12 @@ class TestFeatures(unittest.TestCase):
     def test_get_money_equal(self):
         self.my_features.enter_pin(self.correct_pin)
         self.assertEqual(self.my_features.get_money(9500), self.atm_balance - 500)
+
+    def test_get_money_sequentially(self):
+        self.my_features.enter_pin(self.correct_pin)
+        self.atm_balance = self.atm_balance - 500
+        self.atm_balance = self.atm_balance - 100
+        self.assertEqual(self.my_features.get_money(9400), self.atm_balance)
 
     def test_check_balance(self):
         self.my_features.enter_pin(self.correct_pin)
